@@ -20,24 +20,43 @@ app.get('/', (req, res) => {
     }
 );
 
-
-app.listen(process.env.PORT, () => {    
-    console.log(`Example app listening on port ${process.env.PORT}!`);
-    }
-);
-
-// post routes
-// add a new user associated with a secetor
-app.post('/addUser', (req, res) => {
-    const { name, sectorId } = req.body;
-    knex('Users').insert({ name }).returning('id')
-        .then((userId) => {
-            console.log(userId);
-            knex('User_Sectors').insert({ user_id: userId.id, sector_id: sectorId })
-                .then(() => {
-                    res.json({ success: true });
-                });
+app.get('/users', (req, res) => {
+    // fetch all users from the database
+    knex.select().from('Users')
+        .then((users) => {
+            res.json(users);
         });
     }
 );
 
+
+
+
+// post routes
+// add a new user associated with a secetor
+app.post('/addUser', (req, res) => {
+    const { name, sectors } = req.body;
+    const processedSectors = sectors.map(Number)
+    knex('Users').insert({ name }).returning('id')
+    .then( async (userId) => {
+        const id = userId[0].id;
+        try {
+             await  knex('User_Sectors').insert({
+                    'user_id':id,
+                    'sector_ids':processedSectors
+                });
+                return  res.send('User sectors inserted successfully');
+            }
+            catch (err) {
+              return  res.send('Error inserting user sectors');
+            }
+            
+        });
+    }
+    );
+    
+    app.listen(process.env.PORT, () => {    
+        console.log(`Example app listening on port ${process.env.PORT}!`);
+        }
+    );
+    

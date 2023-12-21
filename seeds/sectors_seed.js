@@ -48,9 +48,9 @@ exports.seed = async function(knex) {
   // Insert sectors
   await insertSectors(knex, sectorsData);
 
-  // Insert user sectors
-  const sectors = await knex('Sectors').select('id');
-  for (const sector of sectors) {
-    await knex('User_Sectors').insert({ user_id: userId.id, sector_id: sector.id });
-  }
+  // // Insert user sectors
+  // const sectors = await knex('Sectors').select('id');
+  // for (const sector of sectors) {
+  //   await knex('User_Sectors').insert({ user_id: userId.id, sector_ids: [sector.id] });
+  // }
 };
