@@ -35,7 +35,7 @@ app.get('/users', (req, res) => {
 // post routes
 // add a new user associated with a secetor
 app.post('/addUser', (req, res) => {
-    const { name, sectors } = req.body;
+    const { name, sectors, agreed } = req.body;
     const processedSectors = sectors.map(Number)
     knex('Users').insert({ name }).returning('id')
     .then( async (userId) => {
@@ -43,7 +43,8 @@ app.post('/addUser', (req, res) => {
         try {
              await  knex('User_Sectors').insert({
                     'user_id':id,
-                    'sector_ids':processedSectors
+                    'sector_ids':processedSectors,
+                    'agreed': true
                 });
                 return  res.send('User sectors inserted successfully');
             }

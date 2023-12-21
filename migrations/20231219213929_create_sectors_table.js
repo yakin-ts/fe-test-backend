@@ -16,6 +16,7 @@ exports.up = function(knex) {
     .createTable('User_Sectors', function(table) {
       table.integer('user_id').unsigned().notNullable().primary();
       table.specificType('sector_ids', 'integer ARRAY');
+      table.boolean('agreed').defaultTo(true);
       table.foreign('user_id').references('Users.id');
     });
 };
