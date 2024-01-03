@@ -4,18 +4,6 @@
  */
 const sectorsData = require('../mock/data').data;
 
-function countSectors(sectors) {
-  let count = 0;
-  for (const sector of sectors) {
-    count++; 
-    if (sector.children) {
-      count += countSectors(sector.children); 
-    }
-  }
-  return count;
-}
-
-console.log('Items count - ', countSectors(sectorsData));
 
 async function insertSectors(knex, sectors, parentId = null) {
   for (const sector of sectors) {
@@ -48,9 +36,5 @@ exports.seed = async function(knex) {
   // Insert sectors
   await insertSectors(knex, sectorsData);
 
-  // // Insert user sectors
-  // const sectors = await knex('Sectors').select('id');
-  // for (const sector of sectors) {
-  //   await knex('User_Sectors').insert({ user_id: userId.id, sector_ids: [sector.id] });
-  // }
+  
 };
